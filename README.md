@@ -50,7 +50,7 @@ ERC721 tokens representing rental items:
 
 1. **Clone the repository**
 ```bash
-git clone https://github.com/your-org/friendlend-contracts
+git clone https://github.com/Steven1823/BFFlend.org.git
 cd friendlend-contracts
 ```
 
