@@ -1,4 +1,4 @@
-# FriendLend - P2P Rental Marketplace Smart Contracts
+# BFFlend - P2P Rental Marketplace Smart Contracts
 
 A decentralized peer-to-peer rental marketplace built for African users, deployed on the Celo blockchain. FriendLend enables secure, trustless rentals of physical items through smart contracts and on-chain identity verification.
 
@@ -55,7 +55,7 @@ cd friendlend-contracts
 ```
 
 2. **Install dependencies**
-```bash
+```bBFFBFFash
 forge install
 ```
 
@@ -242,9 +242,9 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - [Celo Documentation](https://docs.celo.org/)
 
 ### Community
-- Discord: [Join our community](https://discord.gg/friendlend)
-- Telegram: [@friendlend](https://t.me/friendlend)
-- Twitter: [@friendlend](https://twitter.com/friendlend)
+- Discord: [Join our community](https://discord.gg/BFF)
+- Telegram: [@friendlend](https://t.me/BFF)
+- Twitter: [@friendlend](https://twitter.com/BFF)
 
 ## 🗺️ Roadmap
 
