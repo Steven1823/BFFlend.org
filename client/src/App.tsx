@@ -6,6 +6,7 @@ import Browse from './pages/Browse'
 import ItemDetail from './pages/ItemDetail'
 import BorrowerDashboard from './pages/Dashboard/Borrower'
 import LenderDashboard from './pages/Dashboard/Lender'
+import Profile from './pages/Profile'
 
 function App() {
   const [isConnected, setIsConnected] = useState(false)
@@ -31,6 +32,7 @@ function App() {
         <Route path="/item/:id" component={ItemDetail} />
         <Route path="/dashboard/borrower" component={BorrowerDashboard} />
         <Route path="/dashboard/lender" component={LenderDashboard} />
+        <Route path="/profile" component={Profile} />
       </Switch>
     </div>
   )

@@ -24,7 +24,7 @@ const Navbar: React.FC<NavbarProps> = ({ isConnected, userAddress, onConnect, on
             <div className="w-8 h-8 bg-emerald-600 rounded-lg flex items-center justify-center">
               <Shield className="w-5 h-5 text-white" />
             </div>
-            <span className="text-xl font-bold text-gray-900">FriendLend</span>
+            <span className="text-xl font-bold text-gray-900">BFFlend</span>
           </Link>
 
           {/* Desktop Navigation */}
@@ -62,6 +62,17 @@ const Navbar: React.FC<NavbarProps> = ({ isConnected, userAddress, onConnect, on
                   }`}
                 >
                   My Items
+                </Link>
+                <Link 
+                  to="/profile" 
+                  className={`flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                    isActive('/profile') 
+                      ? 'text-emerald-600 bg-emerald-50' 
+                      : 'text-gray-700 hover:text-emerald-600 hover:bg-gray-50'
+                  }`}
+                >
+                  <User className="w-4 h-4" />
+                  <span>Profile</span>
                 </Link>
               </>
             )}
