@@ -1,5 +1,5 @@
 import React from 'react'
-import { Link, useLocation } from 'react-router-dom'
+import { Link, useLocation } from 'wouter'
 import { Wallet, Menu, X, Shield, Search, User } from 'lucide-react'
 
 interface NavbarProps {
@@ -11,9 +11,9 @@ interface NavbarProps {
 
 const Navbar: React.FC<NavbarProps> = ({ isConnected, userAddress, onConnect, onDisconnect }) => {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false)
-  const location = useLocation()
+  const [location] = useLocation()
 
-  const isActive = (path: string) => location.pathname === path
+  const isActive = (path: string) => location === path
 
   return (
     <nav className="bg-white shadow-lg border-b border-gray-100 sticky top-0 z-50">

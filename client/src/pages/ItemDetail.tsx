@@ -1,5 +1,5 @@
 import React from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams } from 'wouter';
 import { ArrowLeft, Calendar, MapPin, User, Shield, Star } from 'lucide-react';
 
 export default function ItemDetail() {

@@ -1,5 +1,5 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
+import { Link } from 'wouter'
 import { ArrowRight, Shield, Zap, Globe, Star, TrendingUp, Users, CheckCircle } from 'lucide-react'
 import TrustBadge from '../components/TrustBadge'
 
