@@ -24,6 +24,15 @@ interface MPesaPaymentResponse {
   CustomerMessage: string;
 }
 
+interface CallbackResult {
+  success: boolean;
+  checkoutRequestId?: string;
+  mpesaReceiptNumber?: string;
+  amount?: number;
+  phoneNumber?: string;
+  errorMessage?: string;
+}
+
 export class DarajaService {
   private config: DarajaConfig;
   private baseUrl: string;
@@ -152,28 +161,27 @@ export class DarajaService {
     }
   }
 
-  processCallback(callbackData: any): {
-    success: boolean;
-    transactionId?: string;
-    amount?: number;
-    phoneNumber?: string;
-    errorMessage?: string;
-  } {
+  processCallback(callbackData: any): CallbackResult {
     try {
       const { Body } = callbackData;
+      const stkCallback = Body.stkCallback;
       
-      if (Body.stkCallback.ResultCode === 0) {
+      // Extract CheckoutRequestID for database lookup
+      const checkoutRequestId = stkCallback.CheckoutRequestID;
+      
+      if (stkCallback.ResultCode === 0) {
         // Payment successful
-        const callbackMetadata = Body.stkCallback.CallbackMetadata;
+        const callbackMetadata = stkCallback.CallbackMetadata;
         const items = callbackMetadata.Item;
         
-        const transactionId = items.find((item: any) => item.Name === 'MpesaReceiptNumber')?.Value;
+        const mpesaReceiptNumber = items.find((item: any) => item.Name === 'MpesaReceiptNumber')?.Value;
         const amount = items.find((item: any) => item.Name === 'Amount')?.Value;
         const phoneNumber = items.find((item: any) => item.Name === 'PhoneNumber')?.Value;
         
         return {
           success: true,
-          transactionId,
+          checkoutRequestId,
+          mpesaReceiptNumber,
           amount,
           phoneNumber
         };
@@ -181,7 +189,8 @@ export class DarajaService {
         // Payment failed
         return {
           success: false,
-          errorMessage: Body.stkCallback.ResultDesc
+          checkoutRequestId,
+          errorMessage: stkCallback.ResultDesc
         };
       }
     } catch (error) {
