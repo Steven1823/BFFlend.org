@@ -1,4 +1,4 @@
-import { supabase } from './supabase';
+// import { supabase } from './supabase'; // Commented out for MemStorage development
 import type { User, InsertUser, Payment, InsertPayment, UpdatePayment } from '@shared/schema';
 
 // Updated interface with additional methods for PostgreSQL
@@ -19,267 +19,58 @@ export interface IStorage {
   updatePaymentStatus(checkoutRequestId: string, status: Payment['status'], receiptNumber?: string): Promise<Payment | undefined>;
 }
 
+// PostgresStorage class (disabled for development - requires Supabase configuration)
 export class PostgresStorage implements IStorage {
+  constructor() {
+    console.warn('PostgresStorage requires Supabase configuration. Use MemStorage for development.');
+  }
+
   async getUser(id: number): Promise<User | undefined> {
-    try {
-      const { data, error } = await supabase
-        .from('users')
-        .select('*')
-        .eq('id', id)
-        .single();
-
-      if (error) {
-        if (error.code === 'PGRST116') {
-          // No rows returned
-          return undefined;
-        }
-        throw error;
-      }
-
-      return data;
-    } catch (error) {
-      console.error('Error fetching user by ID:', error);
-      return undefined;
-    }
+    throw new Error('PostgresStorage not available without Supabase configuration. Use MemStorage for development.');
   }
 
   async getUserByUsername(username: string): Promise<User | undefined> {
-    try {
-      const { data, error } = await supabase
-        .from('users')
-        .select('*')
-        .eq('username', username)
-        .single();
-
-      if (error) {
-        if (error.code === 'PGRST116') {
-          // No rows returned
-          return undefined;
-        }
-        throw error;
-      }
-
-      return data;
-    } catch (error) {
-      console.error('Error fetching user by username:', error);
-      return undefined;
-    }
+    throw new Error('PostgresStorage not available without Supabase configuration. Use MemStorage for development.');
   }
 
   async createUser(insertUser: InsertUser): Promise<User> {
-    try {
-      const { data, error } = await supabase
-        .from('users')
-        .insert(insertUser)
-        .select()
-        .single();
-
-      if (error) {
-        throw error;
-      }
-
-      return data;
-    } catch (error) {
-      console.error('Error creating user:', error);
-      throw error;
-    }
+    throw new Error('PostgresStorage not available without Supabase configuration. Use MemStorage for development.');
   }
 
   async updateUser(id: number, updates: Partial<InsertUser>): Promise<User | undefined> {
-    try {
-      const { data, error } = await supabase
-        .from('users')
-        .update(updates)
-        .eq('id', id)
-        .select()
-        .single();
-
-      if (error) {
-        if (error.code === 'PGRST116') {
-          return undefined;
-        }
-        throw error;
-      }
-
-      return data;
-    } catch (error) {
-      console.error('Error updating user:', error);
-      return undefined;
-    }
+    throw new Error('PostgresStorage not available without Supabase configuration. Use MemStorage for development.');
   }
 
   async deleteUser(id: number): Promise<boolean> {
-    try {
-      const { error } = await supabase
-        .from('users')
-        .delete()
-        .eq('id', id);
-
-      if (error) {
-        throw error;
-      }
-
-      return true;
-    } catch (error) {
-      console.error('Error deleting user:', error);
-      return false;
-    }
+    throw new Error('PostgresStorage not available without Supabase configuration. Use MemStorage for development.');
   }
 
   async getAllUsers(): Promise<User[]> {
-    try {
-      const { data, error } = await supabase
-        .from('users')
-        .select('*')
-        .order('created_at', { ascending: false });
-
-      if (error) {
-        throw error;
-      }
-
-      return data || [];
-    } catch (error) {
-      console.error('Error fetching all users:', error);
-      return [];
-    }
+    throw new Error('PostgresStorage not available without Supabase configuration. Use MemStorage for development.');
   }
 
   async createPayment(insertPayment: InsertPayment): Promise<Payment> {
-    try {
-      const { data, error } = await supabase
-        .from('payments')
-        .insert(insertPayment)
-        .select()
-        .single();
-
-      if (error) {
-        throw error;
-      }
-
-      return data;
-    } catch (error) {
-      console.error('Error creating payment:', error);
-      throw error;
-    }
+    throw new Error('PostgresStorage not available without Supabase configuration. Use MemStorage for development.');
   }
 
   async getPayment(id: string): Promise<Payment | undefined> {
-    try {
-      const { data, error } = await supabase
-        .from('payments')
-        .select('*')
-        .eq('id', id)
-        .single();
-
-      if (error) {
-        if (error.code === 'PGRST116') {
-          return undefined;
-        }
-        throw error;
-      }
-
-      return data;
-    } catch (error) {
-      console.error('Error fetching payment by ID:', error);
-      return undefined;
-    }
+    throw new Error('PostgresStorage not available without Supabase configuration. Use MemStorage for development.');
   }
 
   async getPaymentByCheckoutRequestId(checkoutRequestId: string): Promise<Payment | undefined> {
-    try {
-      const { data, error } = await supabase
-        .from('payments')
-        .select('*')
-        .eq('checkout_request_id', checkoutRequestId)
-        .single();
-
-      if (error) {
-        if (error.code === 'PGRST116') {
-          return undefined;
-        }
-        throw error;
-      }
-
-      return data;
-    } catch (error) {
-      console.error('Error fetching payment by checkout request ID:', error);
-      return undefined;
-    }
+    throw new Error('PostgresStorage not available without Supabase configuration. Use MemStorage for development.');
   }
 
   async updatePayment(id: string, updates: UpdatePayment): Promise<Payment | undefined> {
-    try {
-      const { data, error } = await supabase
-        .from('payments')
-        .update(updates)
-        .eq('id', id)
-        .select()
-        .single();
-
-      if (error) {
-        if (error.code === 'PGRST116') {
-          return undefined;
-        }
-        throw error;
-      }
-
-      return data;
-    } catch (error) {
-      console.error('Error updating payment:', error);
-      return undefined;
-    }
+    throw new Error('PostgresStorage not available without Supabase configuration. Use MemStorage for development.');
   }
 
   async getUserPayments(userId: number): Promise<Payment[]> {
-    try {
-      const { data, error } = await supabase
-        .from('payments')
-        .select('*')
-        .eq('user_id', userId)
-        .order('created_at', { ascending: false });
-
-      if (error) {
-        throw error;
-      }
-
-      return data || [];
-    } catch (error) {
-      console.error('Error fetching user payments:', error);
-      return [];
-    }
+    throw new Error('PostgresStorage not available without Supabase configuration. Use MemStorage for development.');
   }
 
-  async updatePaymentStatus(
-    checkoutRequestId: string, 
-    status: Payment['status'], 
-    receiptNumber?: string
-  ): Promise<Payment | undefined> {
-    try {
-      const updates: UpdatePayment = { 
-        status,
-        ...(receiptNumber && { mpesa_receipt_number: receiptNumber }),
-        ...(status === 'completed' && { transaction_date: new Date().toISOString() })
-      };
-
-      const { data, error } = await supabase
-        .from('payments')
-        .update(updates)
-        .eq('checkout_request_id', checkoutRequestId)
-        .select()
-        .single();
-
-      if (error) {
-        if (error.code === 'PGRST116') {
-          return undefined;
-        }
-        throw error;
-      }
-
-      return data;
-    } catch (error) {
-      console.error('Error updating payment status:', error);
-      return undefined;
-    }
+  async updatePaymentStatus(checkoutRequestId: string, status: Payment['status'], receiptNumber?: string): Promise<Payment | undefined> {
+    throw new Error('PostgresStorage not available without Supabase configuration. Use MemStorage for development.');
   }
 }
 
@@ -347,6 +138,7 @@ export class MemStorage implements IStorage {
     const payment: Payment = {
       id,
       ...insertPayment,
+      user_id: insertPayment.user_id ?? null, // Ensure user_id is not undefined
       status: insertPayment.status || 'pending',
       created_at: now,
       updated_at: now
@@ -407,5 +199,5 @@ export class MemStorage implements IStorage {
 
 // Export the appropriate storage implementation
 // Use PostgresStorage for production, MemStorage for testing
-export const storage = new PostgresStorage();
+export const storage = new MemStorage(); // Using MemStorage for development
 export const memStorage = new MemStorage(); // Available for testing

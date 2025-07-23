@@ -56,9 +56,28 @@ app.use((req, res, next) => {
 
 (async () => {
   try {
+    // Add request logging middleware to debug what's happening
+    app.use((req: Request, res: Response, next: NextFunction) => {
+      log(`📥 ${req.method} ${req.path}`);
+      next();
+    });
+
     const server = await registerRoutes(app);
 
-    // Global error handler - must be after routes
+    // 404 handler for unmatched API routes
+    app.use('/api/*', (req: Request, res: Response) => {
+      res.status(404).json({ error: 'API endpoint not found' });
+    });
+
+    // Setup Vite or static serving - importantly only after setting up all API routes
+    // so the catch-all route doesn't interfere with the other routes
+    if (app.get("env") === "development") {
+      await setupVite(app, server);
+    } else {
+      serveStatic(app);
+    }
+
+    // Global error handler - must be after all middleware
     app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
       const status = err.status || err.statusCode || 500;
       const message = err.message || "Internal Server Error";
@@ -74,42 +93,16 @@ app.use((req, res, next) => {
       });
     });
 
-    app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
-      const status = err.status || err.statusCode || 500;
-      const message = err.message || "Internal Server Error";
-      // 404 handler for unmatched API routes
-      app.use('/api/*', (req: Request, res: Response) => {
-        res.status(404).json({ error: 'API endpoint not found' });
-      });
-
-      res.status(status).json({ message });
-      throw err;
-    });
-    // Setup Vite or static serving
-    if (app.get("env") === "development") {
-      await setupVite(app, server);
-    } else {
-      serveStatic(app);
-    }
-
-    // importantly only setup vite in development and after
-    // setting up all the other routes so the catch-all route
-    // doesn't interfere with the other routes
-    if (app.get("env") === "development") {
-      await setupVite(app, server);
-    } else {
-      serveStatic(app);
-    }
     // Start server
-    const port = 5001;
-    server.listen({
-      port,
-      host: "0.0.0.0",
-      reusePort: true,
-    }, () => {
+    const port = 5000;
+    server.listen(port, "0.0.0.0", () => {
       log(`🚀 Server running on port ${port}`);
       log(`📊 Environment: ${process.env.NODE_ENV || 'development'}`);
       log(`🗄️  Database: ${process.env.VITE_SUPABASE_URL ? 'Connected' : 'Not configured'}`);
+    });
+
+    server.on('error', (error) => {
+      console.error('Server error:', error);
     });
 
 

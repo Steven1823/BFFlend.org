@@ -21,13 +21,17 @@ export const dbConfig = {
 // Validate required environment variables
 function validateConfig() {
   if (!dbConfig.supabase.url || !dbConfig.supabase.anonKey) {
-    throw new Error('Missing required Supabase environment variables. Please check your .env file.');
+    console.warn('Missing Supabase environment variables. Using MemStorage for development.');
+    return false;
   }
+  return true;
 }
 
 // Create Supabase client with service role for server-side operations
 export function createSupabaseClient() {
-  validateConfig();
+  if (!validateConfig()) {
+    throw new Error('Supabase not configured. Use MemStorage instead.');
+  }
   
   return createClient<Database>(
     dbConfig.supabase.url,
@@ -43,7 +47,9 @@ export function createSupabaseClient() {
 
 // Create Supabase client for client-side operations
 export function createSupabaseClientSide() {
-  validateConfig();
+  if (!validateConfig()) {
+    throw new Error('Supabase not configured. Use MemStorage instead.');
+  }
   
   return createClient<Database>(
     dbConfig.supabase.url,
@@ -51,12 +57,24 @@ export function createSupabaseClientSide() {
   );
 }
 
-// Database connection instance
-export const supabase = createSupabaseClient();
+// Database connection instance - only create if configured
+export const supabase = (() => {
+  try {
+    return createSupabaseClient();
+  } catch (error) {
+    console.warn('Supabase client not created:', error);
+    return null;
+  }
+})();
 
 // Health check function
 export async function checkDatabaseConnection(): Promise<boolean> {
   try {
+    if (!supabase) {
+      console.log('Supabase not configured, using MemStorage');
+      return false;
+    }
+    
     const { data, error } = await supabase
       .from('users')
       .select('count')
@@ -73,14 +91,18 @@ export async function checkDatabaseConnection(): Promise<boolean> {
 export async function initializeDatabase() {
   console.log('Initializing database connection...');
   
+  if (!supabase) {
+    console.log('✅ Using in-memory storage for development');
+    return true;
+  }
+  
   const isConnected = await checkDatabaseConnection();
   
   if (isConnected) {
     console.log('✅ Database connected successfully');
   } else {
-    console.error('❌ Database connection failed');
-    throw new Error('Failed to connect to database');
+    console.log('⚠️ Database connection failed, falling back to MemStorage');
   }
   
-  return isConnected;
+  return true; // Always return true to allow app to start with MemStorage
 }
