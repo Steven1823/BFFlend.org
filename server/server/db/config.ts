@@ -30,7 +30,7 @@ function validateConfig() {
 // Create Supabase client with service role for server-side operations
 export function createSupabaseClient() {
   if (!validateConfig()) {
-    throw new Error('Supabase not configured. Use MemStorage instead.');
+    return null;
   }
   
   return createClient<Database>(
@@ -48,7 +48,7 @@ export function createSupabaseClient() {
 // Create Supabase client for client-side operations
 export function createSupabaseClientSide() {
   if (!validateConfig()) {
-    throw new Error('Supabase not configured. Use MemStorage instead.');
+    return null;
   }
   
   return createClient<Database>(
@@ -59,12 +59,12 @@ export function createSupabaseClientSide() {
 
 // Database connection instance - only create if configured
 export const supabase = (() => {
-  try {
-    return createSupabaseClient();
-  } catch (error) {
-    console.warn('Supabase client not created:', error);
+  const client = createSupabaseClient();
+  if (!client) {
+    console.log('Supabase not configured, using MemStorage for development');
     return null;
   }
+  return client;
 })();
 
 // Health check function
