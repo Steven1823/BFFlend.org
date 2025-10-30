@@ -1,4 +1,4 @@
-import { PaymentController } from '../../../server/server/controllers/index.js';
+import { PaymentController } from '../../../server/server/controllers';
 
 export default async function handler(req, res) {
   // Set CORS headers

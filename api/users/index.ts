@@ -1,9 +1,9 @@
-import { PaymentController } from '../../server/server/controllers/index.js';
+import { UserController } from '../../server/server/controllers';
 
 export default async function handler(req, res) {
   // Set CORS headers
   res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
 
   if (req.method === 'OPTIONS') {
@@ -12,10 +12,15 @@ export default async function handler(req, res) {
   }
 
   try {
-    if (req.method === 'POST') {
-      await PaymentController.initiatePayment(req, res);
-    } else {
-      res.status(405).json({ error: 'Method not allowed' });
+    switch (req.method) {
+      case 'GET':
+        await UserController.getAllUsers(req, res);
+        break;
+      case 'POST':
+        await UserController.createUser(req, res);
+        break;
+      default:
+        res.status(405).json({ error: 'Method not allowed' });
     }
   } catch (error) {
     console.error('API Error:', error);

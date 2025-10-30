@@ -1,9 +1,9 @@
-import { UserController } from '../../server/server/controllers/index.js';
+import { UserController } from '../../server/server/controllers';
 
 export default async function handler(req, res) {
   // Set CORS headers
   res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, PUT, DELETE, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
 
   if (req.method === 'OPTIONS') {
@@ -12,12 +12,18 @@ export default async function handler(req, res) {
   }
 
   try {
+    // Add id to params for controller
+    req.params = { id: req.query.id };
+
     switch (req.method) {
       case 'GET':
-        await UserController.getAllUsers(req, res);
+        await UserController.getUser(req, res);
         break;
-      case 'POST':
-        await UserController.createUser(req, res);
+      case 'PUT':
+        await UserController.updateUser(req, res);
+        break;
+      case 'DELETE':
+        await UserController.deleteUser(req, res);
         break;
       default:
         res.status(405).json({ error: 'Method not allowed' });
